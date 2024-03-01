@@ -10,3 +10,4 @@ flask-migrate
 python-dotenv
 Flask-Pydantic
 Pydantic
+bcrypt

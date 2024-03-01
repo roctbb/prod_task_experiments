@@ -11,5 +11,4 @@ ENV SERVER_PORT=8080
 CMD ["sh", "-c", "exec python3 -m flask db init"]
 CMD ["sh", "-c", "exec python3 -m flask db migrate"]
 CMD ["sh", "-c", "exec python3 -m flask db upgrade"]
-CMD ["sh", "-c", "exec ./init_database.sh"]
 CMD ["sh", "-c", "exec python3 -m flask run --host=0.0.0.0 --port=$SERVER_PORT"]
