@@ -6,7 +6,7 @@ from methods.countries import find_country
 class RegisterUserRequest(BaseModel):
     login: str = Field(max_length=30, pattern=r'[a-zA-Z0-9-]+')
     email: str = Field(max_length=50)
-    password: str = Field(..., min_length=6, max_length=100)
+    password: str = Field(min_length=6, max_length=100)
     countryCode: str = Field(max_length=2, pattern=r'[a-zA-Z]{2}')
     isPublic: bool
     phone: Optional[str] = Field(max_length=20, pattern=r'\+[\d]+', default=None)
