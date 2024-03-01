@@ -3,6 +3,7 @@ from manage import *
 from methods.countries import *
 from methods.auth import *
 from methods.friends import *
+from methods.posts import *
 
 
 @app.route('/api/ping', methods=['GET'])
@@ -100,6 +101,14 @@ def remove_friend(user, body: FriendRequest):
 @validate()
 def get_friends(user, query: PaginationRequest):
     return jsonify(as_dict(get_user_friends(user, query))), 200
+
+
+@app.route('/api/posts/new', methods=['POST'])
+@creates_response
+@requires_auth
+@validate()
+def add_post(user, body: AddPostRequest):
+    return jsonify(add_post_from_user(user, body).as_dict()), 200
 
 
 if __name__ == "__main__":

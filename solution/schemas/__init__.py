@@ -5,3 +5,4 @@ from .ChangePasswordRequest import *
 from .PatchUserRequest import *
 from .FriendRequest import *
 from .PaginationRequest import *
+from .AddPostRequest import *
