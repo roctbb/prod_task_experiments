@@ -4,6 +4,7 @@ import bcrypt
 from flask import request
 from models import User, db, ApiToken
 from helpers import transaction
+from werkzeug.exceptions import *
 from exceptions import *
 import secrets
 
@@ -12,7 +13,10 @@ import secrets
 def create_user(query):
     login_user = User.query.filter(
         (User.login == query.login) | (User.email == query.email)).first()
-    phone_user = User.query.filter(User.phone == query.phone).first()
+
+    phone_user = None
+    if query.phone:
+        User.query.filter(User.phone == query.phone).first()
 
     if login_user or phone_user:
         raise NotUnique
@@ -79,6 +83,15 @@ def find_public_profile(login):
 
     if not user or not user.isPublic:
         raise AccessDenied
+
+    return user
+
+
+def find_profile(login):
+    user = User.query.filter_by(login=login).first()
+
+    if not user:
+        raise NotFound
 
     return user
 

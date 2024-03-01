@@ -13,6 +13,9 @@ class User(db.Model):
     phone = db.Column(db.String(20), unique=True)
     image = db.Column(db.String(200))
 
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
     tokens = db.relationship('ApiToken', backref=backref('user', uselist=False), lazy=True)
 
     def as_dict(self):

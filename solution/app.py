@@ -2,6 +2,7 @@ from helpers import *
 from manage import *
 from methods.countries import *
 from methods.auth import *
+from methods.friends import *
 
 
 @app.route('/api/ping', methods=['GET'])
@@ -68,6 +69,37 @@ def change_password(user, body: ChangePasswordRequest):
 @requires_auth
 def search_profile(user, login):
     return jsonify(find_public_profile(login).as_dict()), 200
+
+
+@app.route('/api/friends/add', methods=['POST'])
+@creates_response
+@requires_auth
+@validate()
+def add_friend(user, body: FriendRequest):
+    friend = find_profile(body.login)
+    add_to_friends(user, friend)
+    return jsonify({"status": 'ok'}), 200
+
+
+@app.route('/api/friends/remove', methods=['POST'])
+@creates_response
+@requires_auth
+@validate()
+def remove_friend(user, body: FriendRequest):
+    try:
+        friend = find_profile(body.login)
+        remove_from_friends(user, friend)
+    except:
+        pass
+    return jsonify({"status": 'ok'}), 200
+
+
+@app.route('/api/friends', methods=['GET'])
+@creates_response
+@requires_auth
+@validate()
+def get_friends(user, query: PaginationRequest):
+    return jsonify(as_dict(get_user_friends(user, query))), 200
 
 
 if __name__ == "__main__":
