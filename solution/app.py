@@ -111,5 +111,67 @@ def add_post(user, body: AddPostRequest):
     return jsonify(add_post_from_user(user, body).as_dict()), 200
 
 
+@app.route('/api/posts/<post_id>', methods=['GET'])
+@creates_response
+@requires_auth
+@validate()
+def get_post(user, post_id):
+    post = find_post_by_id(post_id)
+
+    if not has_access_to_feed(user, post.author):
+        return NotFound
+
+    return jsonify(post.as_dict()), 200
+
+
+@app.route('/api/posts/feed/my', methods=['GET'])
+@creates_response
+@requires_auth
+@validate()
+def get_self_posts(user, query: PaginationRequest):
+    return jsonify(as_dict(get_posts_for_user(user, query))), 200
+
+
+@app.route('/api/posts/feed/<login>', methods=['GET'])
+@creates_response
+@requires_auth
+@validate()
+def get_other_user_posts(user, login, query: PaginationRequest):
+    author = find_profile(login)
+
+    if has_access_to_feed(user, author):
+        return jsonify(as_dict(get_posts_for_user(author, query))), 200
+
+    raise NotFound
+
+
+@app.route('/api/posts/<post_id>/like', methods=['POST'])
+@creates_response
+@requires_auth
+@validate()
+def like_post(user, post_id):
+    post = find_post_by_id(post_id)
+
+    if has_access_to_feed(user, post.author):
+        set_reaction(post, user, "like")
+        return jsonify(find_post_by_id(post_id).as_dict()), 200
+
+    raise NotFound
+
+
+@app.route('/api/posts/<post_id>/dislike', methods=['POST'])
+@creates_response
+@requires_auth
+@validate()
+def dislike_post(user, post_id):
+    post = find_post_by_id(post_id)
+
+    if has_access_to_feed(user, post.author):
+        set_reaction(post, user, "dislike")
+        return jsonify(find_post_by_id(post_id).as_dict()), 200
+
+    raise NotFound
+
+
 if __name__ == "__main__":
     app.run(port=SERVER_PORT, debug=APP_DEBUG)

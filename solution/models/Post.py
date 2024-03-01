@@ -23,6 +23,6 @@ class Post(db.Model):
             "tags": self.tags,
             "author": self.author.login,
             "created_at": self.created_at.isoformat(timespec="seconds"),
-            "likesCount": len(list(filter(lambda r: r.reaction == "like", self.reactions))),
-            "dislikesCount": len(list(filter(lambda r: r.reaction == "like", self.reactions)))
+            "likesCount": len(list(filter(lambda r: r.emotion == "like", self.reactions))),
+            "dislikesCount": len(list(filter(lambda r: r.emotion == "dislike", self.reactions)))
         }
