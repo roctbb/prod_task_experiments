@@ -40,6 +40,10 @@ def creates_response(func):
             return jsonify({"reason": "object not found"}), 404
         except NotUnique as e:
             return jsonify({"reason": "dublicate data"}), 409
+        except IncorrectAuth as e:
+            return jsonify({"reason": "access denied with provided data"}), 401
+        except AccessDenied as e:
+            return jsonify({"reason": "access denied"}), 403
         except Exception as e:
             print(e)
             return jsonify({"reason": "server error"}), 500

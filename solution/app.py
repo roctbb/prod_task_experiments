@@ -1,7 +1,7 @@
 from helpers import *
 from manage import *
 from methods.countries import *
-from methods.users import *
+from methods.auth import *
 
 
 @app.route('/api/ping', methods=['GET'])
@@ -29,6 +29,45 @@ def get_country(alpha2: str):
 def register_user(body: RegisterUserRequest):
     user = create_user(body)
     return jsonify({"profile": user.as_dict()}), 201
+
+
+@app.route('/api/auth/sign-in', methods=['POST'])
+@creates_response
+@validate()
+def sign_in(body: LoginRequest):
+    token = authorize_user(body.login, body.password)
+    return jsonify(token.as_dict()), 201
+
+
+@app.route('/api/me/profile')
+@creates_response
+@requires_auth
+def get_profile(user):
+    return jsonify(user.as_dict()), 200
+
+
+@app.route('/api/me/profile', methods=['PATCH'])
+@creates_response
+@requires_auth
+@validate()
+def patch_profile(user, body: PatchUserRequest):
+    return jsonify(patch_user(user, body).as_dict()), 200
+
+
+@app.route('/api/me/updatePassword', methods=['POST'])
+@creates_response
+@requires_auth
+@validate()
+def change_password(user, body: ChangePasswordRequest):
+    change_user_password(user, body.oldPassword, body.newPassword)
+    return jsonify({"status": 'ok'}), 200
+
+
+@app.route('/api/profiles/<login>')
+@creates_response
+@requires_auth
+def search_profile(user, login):
+    return jsonify(find_public_profile(login).as_dict()), 200
 
 
 if __name__ == "__main__":

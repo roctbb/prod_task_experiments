@@ -1,5 +1,6 @@
 from .alchemy import *
 
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -11,6 +12,8 @@ class User(db.Model):
     isPublic = db.Column(db.Boolean, default=False)
     phone = db.Column(db.String(20), unique=True)
     image = db.Column(db.String(200))
+
+    tokens = db.relationship('ApiToken', backref=backref('user', uselist=False), lazy=True)
 
     def as_dict(self):
         return {
