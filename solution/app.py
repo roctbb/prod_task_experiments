@@ -38,7 +38,7 @@ def register_user(body: RegisterUserRequest):
 @validate()
 def sign_in(body: LoginRequest):
     token = authorize_user(body.login, body.password)
-    return jsonify(token.as_dict()), 201
+    return jsonify(token.as_dict()), 200
 
 
 @app.route('/api/me/profile')

@@ -5,8 +5,8 @@ class Friend(db.Model):
     __tablename__ = 'friends'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    friend_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id' , ondelete="CASCADE"))
+    friend_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"))
     added_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship('User', foreign_keys=[user_id],

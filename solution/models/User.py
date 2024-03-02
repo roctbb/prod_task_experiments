@@ -19,11 +19,17 @@ class User(db.Model):
     tokens = db.relationship('ApiToken', backref=backref('user', uselist=False), lazy=True)
 
     def as_dict(self):
-        return {
+        description = {
             "login": self.login,
             "email": self.email,
             "countryCode": self.countryCode,
             "isPublic": self.isPublic,
-            "phone": self.phone,
-            "image": self.image
         }
+
+        if self.phone:
+            description['phone'] = self.phone
+
+        if self.image:
+            description['phone'] = self.image
+
+        return description
